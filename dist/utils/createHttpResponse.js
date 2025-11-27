@@ -5,10 +5,7 @@ const error_1 = require("./error");
 const createHttpErr = (err, message) => {
     const errObj = error_1.ERROR_HELPER.isErrorKey(err) ? error_1.ERROR_HELPER.getObj(err) : err;
     const customMessage = message ? errObj.message + ' : ' + message : errObj.message;
-    return {
-        ...errObj,
-        message: customMessage
-    };
+    return Object.assign(Object.assign({}, errObj), { message: customMessage });
 };
 exports.createHttpErr = createHttpErr;
 const createHttpSuccess = (data) => {

@@ -4,12 +4,13 @@ exports.handleFetchResponse = handleFetchResponse;
 const http_1 = require("../types/http");
 const createHttpResponse_1 = require("./createHttpResponse");
 function handleFetchResponse(data) {
+    var _a;
     if (data.result === false) {
         if (data.code === 400 && data.message === 'expired')
             throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DKMH_EXPIRED_TOKEN, 'The token is expired');
         throw {
             code: data.code,
-            message: data.message ?? 'Unknown error from remote server'
+            message: (_a = data.message) !== null && _a !== void 0 ? _a : 'Unknown error from remote server'
         };
     }
     if (data.code === 403)

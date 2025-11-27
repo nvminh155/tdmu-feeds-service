@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.newsRouter = void 0;
+const express_1 = require("express");
+const news_controller_1 = require("../../controllers/news.controller");
+const router = (0, express_1.Router)();
+exports.newsRouter = router;
+router.post('/', news_controller_1.getNewsFeed);
+router.get('/page-profiles', news_controller_1.getPageProfiles);
+router.get('/post-images', news_controller_1.getPostImages);

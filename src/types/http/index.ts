@@ -1,4 +1,4 @@
-import { errTypes, TError, ErrorKey } from './error';
+import { errTypes, type TError, ErrorKey } from './error';
 
 import { EHttpStatusCode } from './status';
 

@@ -3,3 +3,7 @@ dist/
 archive/
 .env.*
 .env
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

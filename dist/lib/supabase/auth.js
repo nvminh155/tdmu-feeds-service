@@ -1,4 +1,7 @@
-import { jwtVerify } from 'jose';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifySupabaseJWT = verifySupabaseJWT;
+const jose_1 = require("jose");
 const SB_PROJECT_URL = process.env.SB_PROJECT_URL; // https://xxx.supabase.co
 // const JWKS_URL = `${SB_PROJECT_URL}/auth/v1/.well-known/jwks.json`;
 const ISSUER = `${SB_PROJECT_URL}/auth/v1`;
@@ -6,8 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const secret = new TextEncoder().encode(JWT_SECRET);
 // Dùng remote JWKS (tự cache)
 // const jwks = createRemoteJWKSet(new URL(JWKS_URL));
-export async function verifySupabaseJWT(token) {
-    const { payload } = await jwtVerify(token, secret, {
+async function verifySupabaseJWT(token) {
+    const { payload } = await (0, jose_1.jwtVerify)(token, secret, {
         issuer: ISSUER
         // audience: 'authenticated' // tuỳ cấu hình, thường không cần set
     });

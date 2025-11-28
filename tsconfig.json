@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ES2020", // Quy định output module được sử dụng
+    "module": "commonjs", // Quy định output module được sử dụng
     "target": "ES2020", // Target output cho code
     "moduleResolution": "node",  // Add this!
     "rootDir": "./src",

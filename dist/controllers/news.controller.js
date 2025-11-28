@@ -1,12 +1,17 @@
-import { config } from '../config';
-import { BUCKET_NAME } from '../constants';
-import { sbdb } from '../lib/supabase';
-import { ErrorKey } from '../types/http';
-import { createHttpErr, createHttpSuccess } from '../utils/createHttpResponse';
-export async function getNewsFeed(req, res, next) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getNewsFeed = getNewsFeed;
+exports.getPageProfiles = getPageProfiles;
+exports.getPostImages = getPostImages;
+const config_1 = require("../config");
+const constants_1 = require("../constants");
+const supabase_1 = require("../lib/supabase");
+const http_1 = require("../types/http");
+const createHttpResponse_1 = require("../utils/createHttpResponse");
+async function getNewsFeed(req, res, next) {
     try {
         const { dateRange, type } = req.body;
-        const query = sbdb
+        const query = supabase_1.sbdb
             .from('facebook_posts')
             .select('*')
             .eq('type', type ?? 'other')
@@ -19,40 +24,40 @@ export async function getNewsFeed(req, res, next) {
         }
         const { data, error } = await query;
         if (error) {
-            throw createHttpErr(ErrorKey.DB_ERROR, JSON.stringify(error));
+            throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DB_ERROR, JSON.stringify(error));
         }
-        res.json(createHttpSuccess(data));
+        res.json((0, createHttpResponse_1.createHttpSuccess)(data));
     }
     catch (err) {
         next(err);
     }
 }
-export async function getPageProfiles(req, res, next) {
+async function getPageProfiles(req, res, next) {
     try {
-        const { data, error } = await sbdb.from('rss_profiles').select('*');
+        const { data, error } = await supabase_1.sbdb.from('rss_profiles').select('*');
         if (error) {
-            throw createHttpErr(ErrorKey.DB_ERROR, JSON.stringify(error));
+            throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DB_ERROR, JSON.stringify(error));
         }
         const results = (data ?? []).reduce((acc, item) => {
             acc[item.short_name] = item;
             return acc;
         }, {});
-        res.json(createHttpSuccess(results));
+        res.json((0, createHttpResponse_1.createHttpSuccess)(results));
     }
     catch (err) {
         next(err);
     }
 }
-export async function getPostImages(req, res, next) {
+async function getPostImages(req, res, next) {
     try {
         const { post_id } = req.body;
         const path = `posts/${post_id}`;
-        const { data, error } = await sbdb.storage.from(BUCKET_NAME.RSS_INFO).list(path);
+        const { data, error } = await supabase_1.sbdb.storage.from(constants_1.BUCKET_NAME.RSS_INFO).list(path);
         if (error) {
-            throw createHttpErr(ErrorKey.DB_ERROR, JSON.stringify(error));
+            throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DB_ERROR, JSON.stringify(error));
         }
-        const prefixImgUrl = config.prefixPublicStoragePath + '/' + BUCKET_NAME.RSS_INFO + '/' + path + '/';
-        res.json(createHttpSuccess(data.map((item) => prefixImgUrl + item.name)));
+        const prefixImgUrl = config_1.config.prefixPublicStoragePath + '/' + constants_1.BUCKET_NAME.RSS_INFO + '/' + path + '/';
+        res.json((0, createHttpResponse_1.createHttpSuccess)(data.map((item) => prefixImgUrl + item.name)));
     }
     catch (err) {
         next(err);

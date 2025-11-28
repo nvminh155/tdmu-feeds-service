@@ -1,41 +1,51 @@
-import { sbdb } from '../../lib/supabase';
-import { ErrorKey } from '../../types/http/error';
-import { createHttpErr, createHttpSuccess } from '../createHttpResponse';
-import axios from 'axios';
-import FormData from 'form-data';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
-export const uploadFile = async (req, options) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.docxToPdf = exports.deleteFile = exports.getFile = exports.uploadFile = void 0;
+exports.modifyDocxWithVars = modifyDocxWithVars;
+const supabase_1 = require("../../lib/supabase");
+const error_1 = require("../../types/http/error");
+const createHttpResponse_1 = require("../createHttpResponse");
+const axios_1 = __importDefault(require("axios"));
+const form_data_1 = __importDefault(require("form-data"));
+const pizzip_1 = __importDefault(require("pizzip"));
+const docxtemplater_1 = __importDefault(require("docxtemplater"));
+const uploadFile = async (req, options) => {
     const file = req.file;
     if (!file) {
-        throw createHttpErr(ErrorKey.MISSING_KEY, 'Missing "file" key');
+        throw (0, createHttpResponse_1.createHttpErr)(error_1.ErrorKey.MISSING_KEY, 'Missing "file" key');
     }
-    const { error } = await sbdb.storage.from(options.bucket).upload(options.path, file.buffer, {
+    const { error } = await supabase_1.sbdb.storage.from(options.bucket).upload(options.path, file.buffer, {
         contentType: file.mimetype
     });
     if (error)
         throw error;
-    const { data: resData } = sbdb.storage.from(options.bucket).getPublicUrl(options.path);
-    return createHttpSuccess({ path: options.path, url: resData.publicUrl });
+    const { data: resData } = supabase_1.sbdb.storage.from(options.bucket).getPublicUrl(options.path);
+    return (0, createHttpResponse_1.createHttpSuccess)({ path: options.path, url: resData.publicUrl });
 };
-export const getFile = async (req, options) => {
-    const { data, error } = await sbdb.storage.from(options.bucket).download(options.path);
+exports.uploadFile = uploadFile;
+const getFile = async (req, options) => {
+    const { data, error } = await supabase_1.sbdb.storage.from(options.bucket).download(options.path);
     if (error)
         throw error;
     return data;
 };
-export const deleteFile = async (req, options) => {
-    const { error } = await sbdb.storage.from(options.bucket).remove([options.path]);
+exports.getFile = getFile;
+const deleteFile = async (req, options) => {
+    const { error } = await supabase_1.sbdb.storage.from(options.bucket).remove([options.path]);
     if (error)
         throw error;
-    return createHttpSuccess({ message: 'File deleted successfully' });
+    return (0, createHttpResponse_1.createHttpSuccess)({ message: 'File deleted successfully' });
 };
-export const docxToPdf = async (req, fileInput, fileName) => {
+exports.deleteFile = deleteFile;
+const docxToPdf = async (req, fileInput, fileName) => {
     if (!fileInput)
-        throw createHttpErr(ErrorKey.BAD_REQUEST, 'File is not a docx file');
+        throw (0, createHttpResponse_1.createHttpErr)(error_1.ErrorKey.BAD_REQUEST, 'File is not a docx file');
     const incomingFile = req.file;
     const buffer = Buffer.isBuffer(fileInput) ? fileInput : Buffer.from(await fileInput.arrayBuffer());
-    const formData = new FormData();
+    const formData = new form_data_1.default();
     formData.append('file', buffer, {
         filename: incomingFile
             ? incomingFile?.originalname.split('.').pop() + new Date().getTime().toString() + '.docx'
@@ -43,7 +53,7 @@ export const docxToPdf = async (req, fileInput, fileName) => {
         contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     });
     formData.append('userId', '23');
-    const response = await axios.post(`${process.env.PYTHON_SERVER_URL}/upload`, formData, {
+    const response = await axios_1.default.post(`${process.env.PYTHON_SERVER_URL}/upload`, formData, {
         headers: {
             ...formData.getHeaders() // Quan trọng: để axios biết multipart/form-data với boundary
         },
@@ -54,12 +64,13 @@ export const docxToPdf = async (req, fileInput, fileName) => {
     const pdfBuffer = Buffer.from(response.data);
     return pdfBuffer;
 };
+exports.docxToPdf = docxToPdf;
 const delimiters = { start: '{{', end: '}}' };
-export async function modifyDocxWithVars(buffer, sbUploadOptions, replacements) {
+async function modifyDocxWithVars(buffer, sbUploadOptions, replacements) {
     try {
         const { outputPath, bucket } = sbUploadOptions ?? {};
-        const zip = new PizZip(buffer);
-        const doc = new Docxtemplater(zip, {
+        const zip = new pizzip_1.default(buffer);
+        const doc = new docxtemplater_1.default(zip, {
             paragraphLoop: true,
             linebreaks: true,
             delimiters,
@@ -76,7 +87,7 @@ export async function modifyDocxWithVars(buffer, sbUploadOptions, replacements) 
         });
         doc.render(replacements ?? {});
         const bff = doc.getZip().generate({ type: 'nodebuffer' });
-        const { data, error } = await sbdb.storage.from(bucket ?? 'TMP').upload(outputPath ?? 'TMP', bff, {
+        const { data, error } = await supabase_1.sbdb.storage.from(bucket ?? 'TMP').upload(outputPath ?? 'TMP', bff, {
             contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             upsert: true
         });

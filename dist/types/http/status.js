@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EHttpStatusCode = void 0;
 var EHttpStatusCode;
 (function (EHttpStatusCode) {
     EHttpStatusCode[EHttpStatusCode["OK"] = 200] = "OK";
@@ -8,5 +11,4 @@ var EHttpStatusCode;
     EHttpStatusCode[EHttpStatusCode["FORBIDDEN"] = 403] = "FORBIDDEN";
     EHttpStatusCode[EHttpStatusCode["NOT_FOUND"] = 404] = "NOT_FOUND";
     EHttpStatusCode[EHttpStatusCode["INTERNAL_SERVER_ERROR"] = 500] = "INTERNAL_SERVER_ERROR";
-})(EHttpStatusCode || (EHttpStatusCode = {}));
-export { EHttpStatusCode };
+})(EHttpStatusCode || (exports.EHttpStatusCode = EHttpStatusCode = {}));

@@ -1,7 +1,13 @@
-import dotenv from 'dotenv';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DEFAULT_PAGINATION = exports.MODES = exports.config = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
 // import nodemailer from 'nodemailer'
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-const envFound = dotenv.config();
+const envFound = dotenv_1.default.config();
 if (envFound.error && process.env.VERCEL !== "1") {
     throw new Error("Couldn't find .env file");
 }
@@ -13,7 +19,7 @@ if (envFound.error && process.env.VERCEL !== "1") {
 //     pass: process.env.PASS_AUTH
 //   }
 // })
-export const config = {
+exports.config = {
     port: process.env.PORT || 8087,
     dbUrl: process.env.MONGODB_URI,
     jwtSecret: process.env.JWT_SECRET,
@@ -33,14 +39,14 @@ export const config = {
     supabaseServiceRole: process.env.SB_SERVICE_ROLE,
     prefixPublicStoragePath: process.env.SB_PROJECT_URL + '/storage/v1/object/public'
 };
-export var MODES;
+var MODES;
 (function (MODES) {
     MODES["TEST"] = "test";
     MODES["LOCAL"] = "local";
     MODES["DEV"] = "development";
     MODES["PROD"] = "production";
-})(MODES || (MODES = {}));
-export const DEFAULT_PAGINATION = {
+})(MODES || (exports.MODES = MODES = {}));
+exports.DEFAULT_PAGINATION = {
     page: 1,
     pageSize: 10,
     total: 0

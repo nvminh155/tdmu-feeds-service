@@ -36,7 +36,6 @@ async function getNewsFeed(req, res, next) {
         // check 7 days  to now 
         // set hour and minute to 0
         const sevenDaysAgo = (0, dayjs_1.default)().subtract(13, 'day').startOf('day').toISOString();
-        console.log();
         query.gte('converted_time', sevenDaysAgo);
         if (lastDateTime) {
             const date = new Date(lastDateTime);

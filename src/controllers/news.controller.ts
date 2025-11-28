@@ -28,7 +28,6 @@ export async function getNewsFeed(req: Request, res: Response, next: NextFunctio
     // check 7 days  to now 
     // set hour and minute to 0
     const sevenDaysAgo = dayjs().subtract(13, 'day').startOf('day').toISOString();
-    console.log();
     query.gte('converted_time', sevenDaysAgo);
     if (lastDateTime) {
       const date = new Date(lastDateTime);
@@ -37,7 +36,6 @@ export async function getNewsFeed(req: Request, res: Response, next: NextFunctio
 
     if (searchQuery) {
       const safeQuery = searchQuery.replaceAll(',', String.raw`\,`);
-      console.log('searchQuery', safeQuery);
       const q = `"%${searchQuery}%"`;
 
       query.or([`title.ilike.${q}`, `content.ilike.${q}`, `summarization.ilike.${q}`].join(','));
@@ -121,7 +119,6 @@ export async function getPostImages(req: Request, res: Response, next: NextFunct
     }
 
     const prefixImgUrl = config.prefixPublicStoragePath + '/' + BUCKET_NAME.RSS_INFO + '/' + path + '/';
-    console.log(prefixImgUrl);
     res.json(createHttpSuccess(data.map((item) => prefixImgUrl + item.name)));
   } catch (err) {
     next(err);

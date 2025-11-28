@@ -1,18 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createHttpSuccess = exports.createHttpErr = void 0;
-const error_1 = require("./error");
-const createHttpErr = (err, message) => {
-    const errObj = error_1.ERROR_HELPER.isErrorKey(err) ? error_1.ERROR_HELPER.getObj(err) : err;
+import { ERROR_HELPER } from './error';
+export const createHttpErr = (err, message) => {
+    const errObj = ERROR_HELPER.isErrorKey(err) ? ERROR_HELPER.getObj(err) : err;
     const customMessage = message ? errObj.message + ' : ' + message : errObj.message;
-    return Object.assign(Object.assign({}, errObj), { message: customMessage });
+    return {
+        ...errObj,
+        message: customMessage
+    };
 };
-exports.createHttpErr = createHttpErr;
-const createHttpSuccess = (data) => {
+export const createHttpSuccess = (data) => {
     return {
         data,
         success: true,
         error: null
     };
 };
-exports.createHttpSuccess = createHttpSuccess;

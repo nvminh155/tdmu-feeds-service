@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFetchResponse = handleFetchResponse;
-const http_1 = require("../types/http");
-const createHttpResponse_1 = require("./createHttpResponse");
+import { ErrorKey } from '../types/http';
+import { createHttpErr } from './createHttpResponse';
 function handleFetchResponse(data) {
-    var _a;
     if (data.result === false) {
         if (data.code === 400 && data.message === 'expired')
-            throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DKMH_EXPIRED_TOKEN, 'The token is expired');
+            throw createHttpErr(ErrorKey.DKMH_EXPIRED_TOKEN, 'The token is expired');
         throw {
             code: data.code,
-            message: (_a = data.message) !== null && _a !== void 0 ? _a : 'Unknown error from remote server'
+            message: data.message ?? 'Unknown error from remote server'
         };
     }
     if (data.code === 403)
-        throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DKMH_LOGIN_FAILED, 'Login failed');
+        throw createHttpErr(ErrorKey.DKMH_LOGIN_FAILED, 'Login failed');
     return data.data;
 }
+export { handleFetchResponse };

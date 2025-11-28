@@ -1,13 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sbdbPublic = exports.sbdb = void 0;
-const auth_1 = require("./auth");
-const supabase_js_1 = require("@supabase/supabase-js");
-const sbdb = (0, supabase_js_1.createClient)(process.env.SB_PROJECT_URL, process.env.SB_SERVICE_ROLE);
-exports.sbdb = sbdb;
-const sbdbPublic = (0, supabase_js_1.createClient)(process.env.SB_PROJECT_URL, process.env.SB_ANON_KEY);
-exports.sbdbPublic = sbdbPublic;
+import { verifySupabaseJWT } from './auth';
+import { createClient } from '@supabase/supabase-js';
+const sbdb = createClient(process.env.SB_PROJECT_URL, process.env.SB_SERVICE_ROLE);
+const sbdbPublic = createClient(process.env.SB_PROJECT_URL, process.env.SB_ANON_KEY);
 const sb = {
-    verifySupabaseJWT: auth_1.verifySupabaseJWT
+    verifySupabaseJWT
 };
-exports.default = sb;
+export default sb;
+export { sbdb, sbdbPublic };

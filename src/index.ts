@@ -23,7 +23,8 @@ const allowedOrigins = ['https://feeds.tdmu.xyz', 'http://localhost:3000'];
 
 app.use(
   cors({
-    origin: '*'
+    origin: '*',
+    credentials: false,
   })
 );
 

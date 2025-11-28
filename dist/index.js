@@ -19,19 +19,13 @@ const fs_1 = __importDefault(require("./lib/fs"));
 // global.__basedir = __dirname;
 const app = (0, express_1.default)();
 // cấu hình CORS
-const corsOptions = {
-    origin: [
-        'http://localhost:3000', // React/Next.js local
-        'https://yourdomain.com', // domain production
-        'http://192.168.43.5:3000'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-};
+const allowedOrigins = ['https://feeds.tdmu.xyz', 'http://localhost:3000'];
+app.use((0, cors_1.default)({
+    origin: '*',
+    credentials: false,
+}));
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use((0, cors_1.default)(corsOptions));
 app.use('/api/v1', v1_1.routerV1);
 app.get('/', (req, res) => {
     res.send('Hello, World!');

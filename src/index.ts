@@ -30,9 +30,8 @@ app.use(
       }
       return callback(new Error('CORS blocked'));
     },
-    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
 );
 

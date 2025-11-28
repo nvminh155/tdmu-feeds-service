@@ -23,7 +23,8 @@ const corsOptions = {
   origin: [
     'http://localhost:3000', // React/Next.js local
     'https://yourdomain.com', // domain production
-    'http://192.168.43.5:3000'
+    'http://192.168.43.5:3000',
+    'https://feeds.tdmu.xyz'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],

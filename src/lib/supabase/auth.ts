@@ -1,4 +1,5 @@
 import { jwtVerify } from 'jose';
+import { ErrorKey } from '~/types/http/error';
 
 const SB_PROJECT_URL = process.env.SB_PROJECT_URL!; // https://xxx.supabase.co
 // const JWKS_URL = `${SB_PROJECT_URL}/auth/v1/.well-known/jwks.json`;
@@ -10,10 +11,17 @@ const secret = new TextEncoder().encode(JWT_SECRET);
 // const jwks = createRemoteJWKSet(new URL(JWKS_URL));
 
 export async function verifySupabaseJWT(token: string) {
-  const { payload } = await jwtVerify(token, secret, {
-    issuer: ISSUER
-    // audience: 'authenticated' // tuỳ cấu hình, thường không cần set
-  });
-  // payload.sub là user id
-  return payload;
+  try {
+    const { payload } = await jwtVerify(token, secret, {
+      issuer: ISSUER
+      // audience: 'authenticated' // tuỳ cấu hình, thường không cần set
+    });
+    // payload.sub là user id
+    return payload;
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('verifySupabaseJWT error: ', error);
+    }
+    throw new Error('Invalid Authorization');
+  }
 }

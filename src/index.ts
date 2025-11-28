@@ -19,22 +19,25 @@ ensureDir(fsLib.path.archive);
 const app = express();
 
 // cấu hình CORS
-const corsOptions = {
-  origin: [
-    'http://localhost:3000', // React/Next.js local
-    'https://yourdomain.com', // domain production
-    'http://192.168.43.5:3000',
-    'https://feeds.tdmu.xyz'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
+const allowedOrigins = ['https://feeds.tdmu.xyz', 'http://localhost:3000'];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('CORS blocked'));
+    },
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  })
+);
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(cors(corsOptions));
 
 app.use('/api/v1', routerV1);
 

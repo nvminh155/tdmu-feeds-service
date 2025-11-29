@@ -7,13 +7,6 @@ import { routerV1 } from './routes/v1';
 import { errorHandler } from './middlewares/errorHandler';
 import { ErrorKey } from './types/http/error';
 import { createHttpErr } from './utils/createHttpResponse';
-import { ensureDir } from './utils/esureDir';
-
-import fsLib from './lib/fs';
-import path from 'path';
-
-ensureDir('public');
-ensureDir(fsLib.path.archive);
 
 // global.__basedir = __dirname;
 const app = express();
@@ -24,7 +17,7 @@ const allowedOrigins = ['https://feeds.tdmu.xyz', 'http://localhost:3000'];
 app.use(
   cors({
     origin: '*',
-    credentials: false,
+    credentials: false
   })
 );
 

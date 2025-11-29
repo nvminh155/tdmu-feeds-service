@@ -43,7 +43,6 @@ async function getNewsFeed(req, res, next) {
         }
         if (searchQuery) {
             const safeQuery = searchQuery.replaceAll(',', String.raw `\,`);
-            console.log('searchQuery', safeQuery);
             const q = `"%${searchQuery}%"`;
             query.or([`title.ilike.${q}`, `content.ilike.${q}`, `summarization.ilike.${q}`].join(','));
             // query.or(`title.ilike.%${safeQuery}%,content.ilike.%${safeQuery}%,`);
@@ -108,7 +107,6 @@ async function getPostImages(req, res, next) {
             throw (0, createHttpResponse_1.createHttpErr)(http_1.ErrorKey.DB_ERROR, JSON.stringify(error));
         }
         const prefixImgUrl = config_1.config.prefixPublicStoragePath + '/' + constants_1.BUCKET_NAME.RSS_INFO + '/' + path + '/';
-        console.log(prefixImgUrl);
         res.json((0, createHttpResponse_1.createHttpSuccess)(data.map((item) => prefixImgUrl + item.name)));
     }
     catch (err) {

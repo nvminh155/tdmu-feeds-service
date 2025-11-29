@@ -10,10 +10,18 @@ const secret = new TextEncoder().encode(JWT_SECRET);
 // Dùng remote JWKS (tự cache)
 // const jwks = createRemoteJWKSet(new URL(JWKS_URL));
 async function verifySupabaseJWT(token) {
-    const { payload } = await (0, jose_1.jwtVerify)(token, secret, {
-        issuer: ISSUER
-        // audience: 'authenticated' // tuỳ cấu hình, thường không cần set
-    });
-    // payload.sub là user id
-    return payload;
+    try {
+        const { payload } = await (0, jose_1.jwtVerify)(token, secret, {
+            issuer: ISSUER
+            // audience: 'authenticated' // tuỳ cấu hình, thường không cần set
+        });
+        // payload.sub là user id
+        return payload;
+    }
+    catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+            console.error('verifySupabaseJWT error: ', error);
+        }
+        throw new Error('Invalid Authorization');
+    }
 }

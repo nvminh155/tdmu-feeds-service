@@ -6,7 +6,6 @@ function checkUserInGroups(user_id, groups) {
 }
 const STAFF_ID = 'a0a43d68-f36d-4408-af6c-5e23e617b575';
 const handlerWorkflowMiddleware = async (req, res, next) => {
-    console.log(req.user_id);
     try {
         const groups = [
             {

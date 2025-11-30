@@ -54,7 +54,7 @@ export async function getNewsFeed(req: Request, res: Response, next: NextFunctio
       }
     }
 
-    if (type && !type.includes('all')) {
+    if (type && !type.includes('all') && !type.includes('tất cả')) {
       query.overlaps(
         'tags',
         type

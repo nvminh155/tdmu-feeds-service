@@ -25,7 +25,11 @@ export async function getNewsFeed(req: Request, res: Response, next: NextFunctio
       query.lt('converted_time', dateRange.to);
     }
 
-    // check 7 days  to now 
+    if (lastDateTime) {
+      const date = new Date(lastDateTime);
+      query.lt('converted_time', date.toISOString());
+    }
+    // check 7 days  to now
     // set hour and minute to 0
     const sevenDaysAgo = dayjs().subtract(13, 'day').startOf('day').toISOString();
     query.gte('converted_time', sevenDaysAgo);

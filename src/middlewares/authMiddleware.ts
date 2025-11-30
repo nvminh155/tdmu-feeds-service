@@ -26,7 +26,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     req.user_id = decoded.sub;
     next();
   } catch (error) {
-    console.error('authMiddleware error: ', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('authMiddleware error: ', error);
+    }
     throw createHttpErr(ErrorKey.AUTH_REQUIRED, 'Invalid Authorization');
   }
 };
